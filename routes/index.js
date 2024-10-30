@@ -43,4 +43,13 @@ routes.use('/newsletter', require('../routes/CTANewsletterRoutes'))
 // CTA Image Routes
 routes.use('/image', require('../routes/CTAImageRoutes'))
 
+// CTA Coupon Routes
+routes.use('/coupon', require('../routes/CTACouponRoutes'));
+
+// CTA Contact Routes
+routes.use('/contact', require('../routes/CTAContactRoutes'));
+
+// Bio Routes
+routes.use('/bio', require('../routes/bioRoutes'));
+
 module.exports = routes;      

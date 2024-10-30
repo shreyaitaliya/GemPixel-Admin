@@ -50,7 +50,7 @@ const AddCTAImage = async (req, res) => {
 // GetAllData
 const GetAllData = async (req, res) => {
     try {
-        const FindData = await ctaimageModel.findAll({ IsDeleted: 0 })
+        const FindData = await ctaimageModel.findAll({ where: { IsDeleted: 0 } })
         if (!FindData) {
             return res.status(400).send({
                 success: false,
@@ -166,9 +166,39 @@ const Update = async (req, res) => {
 };
 
 // Delete
-const Delte = async (req, res) => {
+const Delete = async (req, res) => {
     try {
         const id = req.params.id;
+        const FindData = await ctaimageModel.findOne({ where: { ctaimageID: id, IsDeleted: 0 } });
+        if (!FindData) {
+            return res.status(400).send({
+                success: false,
+                message: 'CTAImage Data Not Found..',
+            })
+        }
+        const History = await ctaimagehistoryModel.create({
+            ctaimageID: FindData.ctaimageID,
+            name: FindData.name,
+            link: FindData.link,
+            logo: FindData.logo,
+            bgimage: FindData.bgimage,
+            bgcolor: FindData.bgcolor,
+            BackupCreatedBy: FindData.createdBy,
+            BackupCreatedOn: new Date(),
+        })
+
+        const changedstatus = await ctaimageModel.update({ IsDeleted: 1 }, { where: { ctaimageID: id } })
+        if (changedstatus[0] === 0) {
+            return res.status(500).send({
+                success: false,
+                message: "CTAImage Not Deleted."
+            })
+        }
+        return res.status(200).send({
+            success: true,
+            message: 'CTAImage Deleted Successfully..'
+        })
+
     } catch (error) {
         console.log(error);
         return res.status(400).send({
@@ -178,5 +208,4 @@ const Delte = async (req, res) => {
     }
 }
 
-
-module.exports = ({ AddCTAImage, GetAllData, GetByID, Update })
+module.exports = ({ AddCTAImage, GetAllData, GetByID, Update, Delete })

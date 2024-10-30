@@ -30,5 +30,7 @@ routes.get('/:id', ctaimageController.GetByID);
 
 routes.put('/:id', TokenVerify, upload.fields([{ name: 'logo' }, { name: 'bgimage' }]), ctaimageController.Update);
 
+routes.delete('/:id', ctaimageController.Delete);
+
 
 module.exports = routes
