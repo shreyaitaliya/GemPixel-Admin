@@ -2,25 +2,29 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
 module.exports = (sequelize, DataTypes) => {
-    const domain = sequelize.define('domain', {
-        domainID: {
+    const articlecategory = sequelize.define('articlecategory', {
+        categoryID: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        domain: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        domainroot: {
+        iconstyle: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        biopage: {
+        iconemoji: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        domainpage: {
+        language: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        description: {
             type: DataTypes.STRING,
             allowNull: true,
         },
@@ -49,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         timestamps: false,
-        tableName: "domain",
+        tableName: "articlecategory",
     });
-    return domain;
+    return articlecategory;
 };   

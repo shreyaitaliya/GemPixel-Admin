@@ -52,4 +52,16 @@ routes.use('/contact', require('../routes/CTAContactRoutes'));
 // Bio Routes
 routes.use('/bio', require('../routes/bioRoutes'));
 
+// Domain Routes
+routes.use('/domain', require('../routes/domainRoutes'));
+
+// Page Routes
+routes.use('/page', require('../routes/pageRoutes'));
+
+// ArticleCategory Routes
+routes.use('/articlecategory', require('../routes/articleCategoryRoutes'));
+
+// Article Routes
+routes.use('/article', require('../routes/articleRoutes'));
+
 module.exports = routes;      

@@ -138,7 +138,7 @@ const Delete = async (req, res) => {
             BackupCreatedBy: FindData.createdBy,
             BackupCreatedOn: new Date(),
         });
-
+        
         const changedata = await bioModel.update({ IsDeleted: 1 }, { where: { bioID: id } });
 
         if (changedata[0] === 0) {

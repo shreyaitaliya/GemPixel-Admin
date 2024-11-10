@@ -2,11 +2,15 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
 module.exports = (sequelize, DataTypes) => {
-    const domain = sequelize.define('domain', {
-        domainID: {
+    const domainhistory = sequelize.define('domainhistory', {
+        domainhistoryID: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
+        },
+        domainID: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         },
         domain: {
             type: DataTypes.STRING,
@@ -24,32 +28,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        createdBy: {
+        BackupCreatedBy: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        createdOn: {
+        BackupCreatedOn: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW
-        },
-        LastModifiedBy: {
-            type: DataTypes.STRING
-        },
-        LastModifiedOn: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
-        },
-        IsActive: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true
-        },
-        IsDeleted: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
         },
     }, {
         timestamps: false,
-        tableName: "domain",
+        tableName: "domainhistory",
     });
-    return domain;
+    return domainhistory;
 };   

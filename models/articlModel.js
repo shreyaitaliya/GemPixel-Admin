@@ -2,27 +2,35 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
 module.exports = (sequelize, DataTypes) => {
-    const domain = sequelize.define('domain', {
-        domainID: {
+    const article = sequelize.define('article', {
+        articleID: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        domain: {
+        que: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        domainroot: {
+        slug: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        biopage: {
+        category: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        domainpage: {
+        ans: {
             type: DataTypes.STRING,
             allowNull: true,
+        },
+        pricingpage: {
+            type: DataTypes.INTEGER,
+            default: false,
+            validate: {
+                isIn: [[0, 1]]
+            },
+            comment: "'0 INACTIVE' '1 ACTIVE'"
         },
         createdBy: {
             type: DataTypes.STRING,
@@ -49,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         timestamps: false,
-        tableName: "domain",
+        tableName: "article",
     });
-    return domain;
+    return article;
 };   

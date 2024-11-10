@@ -2,54 +2,47 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
 module.exports = (sequelize, DataTypes) => {
-    const domain = sequelize.define('domain', {
-        domainID: {
+    const categoryhistory = sequelize.define('categoryhistory', {
+        categoryhistoryID: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        domain: {
+        categoryID: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        domainroot: {
+        iconstyle: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        biopage: {
+        iconemoji: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        domainpage: {
+        language: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        createdBy: {
+        description: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        BackupCreatedBy: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        createdOn: {
+        BackupCreatedOn: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW
-        },
-        LastModifiedBy: {
-            type: DataTypes.STRING
-        },
-        LastModifiedOn: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
-        },
-        IsActive: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true
-        },
-        IsDeleted: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
         },
     }, {
         timestamps: false,
-        tableName: "domain",
+        tableName: "categoryhistory",
     });
-    return domain;
+    return categoryhistory;
 };   

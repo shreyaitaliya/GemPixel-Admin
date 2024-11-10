@@ -2,54 +2,51 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
 module.exports = (sequelize, DataTypes) => {
-    const domain = sequelize.define('domain', {
-        domainID: {
+    const articlehistory = sequelize.define('articlehistory', {
+        articlehistoryID: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        domain: {
+        articleID: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        que: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        domainroot: {
+        slug: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        biopage: {
+        category: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        domainpage: {
+        ans: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        createdBy: {
+        pricingpage: {
+            type: DataTypes.INTEGER,
+            default: false,
+            validate: {
+                isIn: [[0, 1]]
+            },
+            comment: "'0 INACTIVE' '1 ACTIVE'"
+        },
+        BackupCreatedBy: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        createdOn: {
+        BackupCreatedOn: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW
-        },
-        LastModifiedBy: {
-            type: DataTypes.STRING
-        },
-        LastModifiedOn: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
-        },
-        IsActive: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true
-        },
-        IsDeleted: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
         },
     }, {
         timestamps: false,
-        tableName: "domain",
+        tableName: "articlehistory",
     });
-    return domain;
+    return articlehistory;
 };   
