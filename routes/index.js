@@ -64,4 +64,10 @@ routes.use('/articlecategory', require('../routes/articleCategoryRoutes'));
 // Article Routes
 routes.use('/article', require('../routes/articleRoutes'));
 
+// Adverticemnet Routes
+routes.use('/adverticement', require('../routes/adverticementTypeRoutes'));
+
+// Plan Routes
+routes.use('/plan', require('../routes/planRoutes'));
+
 module.exports = routes;      
