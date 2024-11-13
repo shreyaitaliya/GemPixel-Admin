@@ -70,4 +70,16 @@ routes.use('/adverticement', require('../routes/adverticementTypeRoutes'));
 // Plan Routes
 routes.use('/plan', require('../routes/planRoutes'));
 
+// Coupon Routes
+routes.use('/plancoupon', require('../routes/couponRoutes'));
+
+// Voucher Routes
+routes.use('/voucher', require('../routes/voucherRoutes'));
+
+// TAXRate Routes
+routes.use('/taxrate', require('../routes/taxrateRoutes'));
+
+// Notification Routes
+routes.use('/notification', require('../routes/notificationRoutes'));
+
 module.exports = routes;      

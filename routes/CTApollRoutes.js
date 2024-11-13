@@ -9,12 +9,15 @@ const TokenVerify = require('../middelware/adminToken');
 // Routes
 routes.post('/', TokenVerify, CTAController.AddCtaPoll);
 
-routes.get('/', TokenVerify, CTAController.GetAllData);
+routes.get('/', CTAController.GetAllData);
 
 routes.get('/:id', TokenVerify, CTAController.GetById);
 
 routes.put('/:id', TokenVerify, CTAController.Update);
 
 routes.delete('/:id', TokenVerify, CTAController.Delete);
+
+routes.get('/alldata', CTAController.GetAllCTAData);
+
 
 module.exports = routes

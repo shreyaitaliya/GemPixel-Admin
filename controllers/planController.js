@@ -275,5 +275,4 @@ const Delete = async (req, res) => {
     }
 }
 
-
 module.exports = ({ GetAllOption, AddPlan, GetAllPlan, GetByID, Update, Delete })
