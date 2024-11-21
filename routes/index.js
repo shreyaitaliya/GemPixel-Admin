@@ -82,4 +82,7 @@ routes.use('/taxrate', require('../routes/taxrateRoutes'));
 // Notification Routes
 routes.use('/notification', require('../routes/notificationRoutes'));
 
+// DashboardQrCode Routes
+routes.use('/dashboard', require('../routes/dashboardQrCodeRoutes'));
+
 module.exports = routes;      

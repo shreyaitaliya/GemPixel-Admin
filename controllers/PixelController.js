@@ -1,44 +1,11 @@
 const { DataTypes, where } = require('sequelize');
 const db = require('../config/db');
 const sequelize = db.sequelize;
-const pixelPoviderModel = require('../models/pixelProviderModel')(sequelize, DataTypes);
+const pixelPoviderModel = require('../models/pixelProviderModel');
 const pixelModel = require('../models/pixelModel')(sequelize, DataTypes);
 const pixelHistoryModel = require('../models/pixelHistoryModel')(sequelize, DataTypes);
 const path = require('path');
 const fs = require('fs');
-
-async function fetchDataAndInsertIntoDB() {
-    try {
-        const filePath = path.join(__dirname, '../JsonFiles/pixelProvider.json');
-        const jsonData = fs.readFileSync(filePath);
-        const pixelproviderData = JSON.parse(jsonData);
-
-        const subscriptionModel = await pixelPoviderModel.findOne({});
-        if (!subscriptionModel) {
-            const insertDataPromises = pixelproviderData.map(async (data) => {
-                try {
-                    return await pixelPoviderModel.create(data);
-                } catch (error) {
-                    console.error('Error Inserting Data : ', error.message);
-                    throw error;
-                }
-            })
-
-            const insertData = await Promise.all(insertData);
-            if (!insertData.some(data => !!data)) {
-                return {
-                    ErrorCode: "REQUEST",
-                    ErrorMessage: 'Attribute Not Inserted In Table'
-                }
-            }
-
-        }
-    } catch (error) {
-        console.error('Error Processing Data:', error.message)
-    }
-}
-
-fetchDataAndInsertIntoDB();
 
 // Add Pixel
 const AddPixel = async (req, res) => {

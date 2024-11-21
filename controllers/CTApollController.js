@@ -4,12 +4,11 @@ const sequelize = db.sequelize;
 const ctapollModel = require('../models/CTApollModel')(sequelize, DataTypes);
 const ctapollhistoryModel = require('../models/CTApollHistoryModel')(sequelize, DataTypes);
 const ctacontactModel = require('../models/CTAContactModel')(sequelize, DataTypes);
-const CtacouponModel = require('../models/CTACouponModel')(sequelize, DataTypes);
+const ctacouponModel = require('../models/CTACouponModel')(sequelize, DataTypes);
 const ctaimageModel = require('../models/CTAImageModel')(sequelize, DataTypes);
 const ctamessageModel = require('../models/CTAMessageModel')(sequelize, DataTypes);
 const ctanewsletterModel = require('../models/CTANewsletterModel')(sequelize, DataTypes);
-
-
+ 
 // Add Data
 const AddCtaPoll = async (req, res) => {
     try {
@@ -178,42 +177,33 @@ const Delete = async (req, res) => {
     }
 }
 
-const GetAllCTAData = async (req, res) => {
+// GetAllData In One Page
+const AllData = async (req, res) => {
     try {
-        // Fetch data from each model
-        const [contacts, coupons, images, messages, newsletters, polls] = await Promise.all([
-            ctacontactModel.findAll({}),
-            CtacouponModel.findAll({}),
-            ctaimageModel.findAll({}),
-            ctamessageModel.findAll({}),
-            ctanewsletterModel.findAll({}),
-            ctapollModel.findAll({})
+        const [ctapolldata, ctacontac, ctacoupon, ctaimage, ctamessage, ctanewsletter] = await Promise.all([
+            ctapollModel.findAll(),
+            ctacontactModel.findAll(),
+            ctacouponModel.findAll(),
+            ctaimageModel.findAll(),
+            ctamessageModel.findAll(),
+            ctanewsletterModel.findAll()
         ]);
-
-        // Handle null values by setting them to empty arrays
-        const allData = {
-            contacts: contacts || [],
-            coupons: coupons || [],
-            images: images || [],
-            messages: messages || [],
-            newsletters: newsletters || [],
-            polls: polls || []
-        };
 
         return res.status(200).send({
             success: true,
-            message: 'All CTA Data Retrieved Successfully.',
-            data: allData
+            message: 'All Data Viewed Successfully...',
+            Data: { ctapolldata, ctacontac, ctacoupon, ctaimage, ctamessage, ctanewsletter }
         });
+
     } catch (error) {
         console.log(error);
         return res.status(400).send({
             success: false,
-            message: error.message || 'Error retrieving CTA data.'
+            message: error.message
         });
     }
-};
+}
 
 module.exports = ({
-    AddCtaPoll, GetAllData, GetById, Update, Delete, GetAllCTAData
+    AddCtaPoll, GetAllData, GetById, Update, Delete, AllData
 })

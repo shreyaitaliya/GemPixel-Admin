@@ -11,13 +11,12 @@ routes.post('/', TokenVerify, CTAController.AddCtaPoll);
 
 routes.get('/', CTAController.GetAllData);
 
-routes.get('/:id', TokenVerify, CTAController.GetById);
+routes.get('/:id', CTAController.GetById);
 
-routes.put('/:id', TokenVerify, CTAController.Update);
+routes.put('/:id', CTAController.Update);
 
-routes.delete('/:id', TokenVerify, CTAController.Delete);
+routes.delete('/:id', CTAController.Delete);
 
-routes.get('/alldata', CTAController.GetAllCTAData);
-
+routes.get('/cta/alldata', CTAController.AllData);
 
 module.exports = routes

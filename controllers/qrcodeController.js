@@ -10,47 +10,29 @@ const { text } = require("body-parser");
 // Add QrCode
 const AddQrCode = async (req, res) => {
     try {
-        const { codename, domain, text, smsmessage, wifi, staticvcard, event, link, email, phone, application, whatsapp, cryptocurrency } = req.body;
+        const { codename, domain, background, foreground, eyeframecolor, eyecolor, design, matrixstyle, eyeframe, eyestyle, framestyle, textfont, font, framecolor, textcolor, margin, errorcorrection, text, smsmessage, wifi, staticvcard, event, link, email, phone, application, whatsapp, cryptocurrency } = req.body;
         const createdBy = req.user.username;
         const LastModifiedBy = req.user.username;
 
-        // First create the base qrCodeData object
         const qrCodeData = {
-            codename,
-            domain,
-            createdBy,
-            LastModifiedBy
+            codename, domain, background, foreground, eyeframecolor, eyecolor, design, matrixstyle, eyeframe, eyestyle, framestyle, textfont, font, framecolor, textcolor, margin, errorcorrection, createdBy, LastModifiedBy,
+            image: req.file?.path || ""
         };
 
         let qrContentData = null;
         let qrType = '';
 
-        // Check which field was provided and set the QR content
-        if (text) {
-            if (!text.yourtext) {
-                return res.status(400).send({ success: false, message: 'Text content is required' });
-            }
+        // Assign content to qrContentData based on provided type
+        if (text && text.yourtext) {
             qrContentData = { yourtext: text.yourtext };
             qrType = 'text';
-            qrCodeData.text = qrContentData;
-        } else if (smsmessage) {
-            if (!smsmessage.phonenumber || !smsmessage.message) {
-                return res.status(400).send({ success: false, message: 'Both phone number and message are required for SMS' });
-            }
+        } else if (smsmessage && smsmessage.phonenumber && smsmessage.message) {
             qrContentData = { phonenumber: smsmessage.phonenumber, message: smsmessage.message };
             qrType = 'smsmessage';
-            qrCodeData.smsmessage = qrContentData;
-        } else if (wifi) {
-            if (!wifi.ssid || !wifi.password || !wifi.encryption) {
-                return res.status(400).send({ success: false, message: 'SSID, Password, and Encryption are required for WiFi' });
-            }
+        } else if (wifi && wifi.ssid && wifi.password && wifi.encryption) {
             qrContentData = { ssid: wifi.ssid, password: wifi.password, encryption: wifi.encryption };
             qrType = 'wifi';
-            qrCodeData.wifi = qrContentData;
-        } else if (staticvcard) {
-            if (!staticvcard.firstname || !staticvcard.lastname || !staticvcard.organization || !staticvcard.phone || !staticvcard.cell || !staticvcard.fax || !staticvcard.email || !staticvcard.website) {
-                return res.status(400).send({ success: false, message: 'All Fields are required for VCard' });
-            }
+        } else if (staticvcard && staticvcard.firstname && staticvcard.lastname) {
             qrContentData = {
                 firstname: staticvcard.firstname,
                 lastname: staticvcard.lastname,
@@ -62,11 +44,7 @@ const AddQrCode = async (req, res) => {
                 website: staticvcard.website,
             };
             qrType = 'staticvcard';
-            qrCodeData.staticvcard = qrContentData;
-        } else if (event) {
-            if (!event.title || !event.description || !event.location || !event.url || !event.startdate || !event.enddate) {
-                return res.status(400).send({ success: false, message: 'All Fields are required for Event' });
-            }
+        } else if (event && event.title && event.startdate) {
             qrContentData = {
                 title: event.title,
                 description: event.description,
@@ -76,70 +54,41 @@ const AddQrCode = async (req, res) => {
                 enddate: event.enddate
             };
             qrType = 'event';
-            qrCodeData.event = qrContentData;
-        } else if (link) {
-            if (!link.yourlink) {
-                return res.status(400).send({ success: false, message: 'Link content is required' });
-            }
+        } else if (link && link.yourlink) {
             qrContentData = { yourlink: link.yourlink };
             qrType = 'link';
-            qrCodeData.link = qrContentData;
-        } else if (email) {
-            if (!email.email || !email.subject || !email.message) {
-                return res.status(400).send({ success: false, message: 'Email, Subject And Message Fields are required' });
-            }
+        } else if (email && email.email && email.subject) {
             qrContentData = {
                 email: email.email,
                 subject: email.subject,
                 message: email.message,
             };
             qrType = 'email';
-            qrCodeData.email = qrContentData;
-        } else if (phone) {
-            if (!phone.phonenumber) {
-                return res.status(400).send({ success: false, message: 'Phone content is required' });
-            }
+        } else if (phone && phone.phonenumber) {
             qrContentData = { phonenumber: phone.phonenumber };
             qrType = 'phone';
-            qrCodeData.phone = qrContentData;
-        } else if (application) {
-            if (!application.appstore || !application.googleplay || !application.others) {
-                return res.status(400).send({ success: false, message: 'Application content is required' });
-            }
+        } else if (application && application.appstore) {
             qrContentData = {
                 appstore: application.appstore,
                 googleplay: application.googleplay,
                 others: application.others,
             };
             qrType = 'application';
-            qrCodeData.application = qrContentData;
-        } else if (whatsapp) {
-            if (!whatsapp.phonenumber || !whatsapp.message) {
-                return res.status(400).send({ success: false, message: 'Whatsapp content is required' });
-            }
+        } else if (whatsapp && whatsapp.phonenumber) {
             qrContentData = { phonenumber: whatsapp.phonenumber, message: whatsapp.message };
             qrType = 'whatsapp';
-            qrCodeData.whatsapp = qrContentData;
-        } else if (cryptocurrency) {
-            if (!cryptocurrency.walletaddress) {
-                return res.status(400).send({ success: false, message: 'Cryptocurrency content is required' });
-            }
+        } else if (cryptocurrency && cryptocurrency.walletaddress) {
             qrContentData = { walletaddress: cryptocurrency.walletaddress };
             qrType = 'cryptocurrency';
-            qrCodeData.cryptocurrency = qrContentData;
         } else {
             return res.status(400).send({ success: false, message: 'No valid QR code content provided' });
         }
 
-        if (!qrContentData) {
-            return res.status(400).send({ success: false, message: 'No valid data provided to generate QR code.' });
-        }
+        qrCodeData[qrType] = qrContentData;
 
         const AddData = await qrcodeModel.create(qrCodeData);
 
-        // Generate QR code string from qrContentData
         const qrCodeString = JSON.stringify(qrContentData);
-
         const qrCodeImage = await QRCode.toDataURL(qrCodeString);
 
         await AddData.update({ qrcode: qrCodeImage });
@@ -153,12 +102,9 @@ const AddQrCode = async (req, res) => {
 
     } catch (error) {
         console.error('Error in AddQrCode:', error);
-        return res.status(400).send({
-            success: false,
-            message: error.message
-        });
+        return res.status(400).send({ success: false, message: error.message });
     }
-}
+};
 
 // GetAll Data 
 const GetAllData = async (req, res) => {
@@ -172,7 +118,7 @@ const GetAllData = async (req, res) => {
         }
 
         // Map through the FindData array to extract qrcode and codename
-        const formattedData = FindData.map(data => ({
+        const formattedData = FindData.map(data => ({  
             qrcode: data.qrcode,
             codename: data.codename,
         }));
@@ -344,11 +290,11 @@ const GetById = async (req, res) => {
     }
 }
 
-// Update
+// Update  <<<<------------------ Update Pending -------------------------->>>>
 const UpdateQrCode = async (req, res) => {
     try {
         const id = req.params.id;
-        const { codename, domain, text, smsmessage, wifi, staticvcard, event, link, email, phone, application, whatsapp, cryptocurrency } = req.body;
+        const { codename, domain, background, foreground, eyeframecolor, eyecolor, design, matrixstyle, eyeframe, eyestyle, framestyle, textfont, font, framecolor, textcolor, margin, errorcorrection, text, smsmessage, wifi, staticvcard, event, link, email, phone, application, whatsapp, cryptocurrency } = req.body;
 
         // Fetch the existing data
         const qrCodeRecord = await qrcodeModel.findByPk(id);
@@ -372,6 +318,22 @@ const UpdateQrCode = async (req, res) => {
             application: qrCodeRecord.application,
             whatsapp: qrCodeRecord.whatsapp,
             cryptocurrency: qrCodeRecord.cryptocurrency,
+            background: qrCodeRecord.background,
+            foreground: qrCodeRecord.foreground,
+            eyeframecolor: qrCodeRecord.eyeframecolor,
+            eyecolor: qrCodeRecord.eyecolor,
+            design: qrCodeRecord.design,
+            image: qrCodeRecord.image,
+            matrixstyle: qrCodeRecord.matrixstyle,
+            eyeframe: qrCodeRecord.eyeframe,
+            eyestyle: qrCodeRecord.eyestyle,
+            framestyle: qrCodeRecord.framestyle,
+            textfont: qrCodeRecord.textfont,
+            font: qrCodeRecord.font,
+            framecolor: qrCodeRecord.framecolor,
+            textcolor: qrCodeRecord.textcolor,
+            margin: qrCodeRecord.margin,
+            errorcorrection: qrCodeRecord.errorcorrection,
             BackupCreatedBy: qrCodeRecord.createdBy,
             BackupCreatedOn: new Date(),
         });
@@ -491,8 +453,40 @@ const UpdateQrCode = async (req, res) => {
             return res.status(400).send({ success: false, message: 'No valid data provided to update QR code.' });
         }
 
+        let imagePath = qrCodeRecord.image;
+        if (req.file) {
+            const newImagePath = req.file.path;
+
+            // Check if an old image exists and delete it
+            if (qrCodeRecord.image && fs.existsSync(path.resolve(qrCodeRecord.image))) {
+                fs.promises.unlink(path.resolve(qrCodeRecord.image))  // Async deletion
+                    .catch((err) => console.error('Error deleting old image:', err));
+            }
+
+            imagePath = newImagePath;
+        }
+
+        if (codename) updatedFields.codename = codename;
+        if (domain) updatedFields.domain = domain;
+        if (background) updatedFields.background = background;
+        if (foreground) updatedFields.foreground = foreground;
+        if (eyeframecolor) updatedFields.eyeframecolor = eyeframecolor;
+        if (eyecolor) updatedFields.eyecolor = eyecolor;
+        if (design) updatedFields.design = design;
+        if (matrixstyle) updatedFields.matrixstyle = matrixstyle;
+        if (eyeframe) updatedFields.eyeframe = eyeframe;
+        if (eyestyle) updatedFields.eyestyle = eyestyle;
+        if (framestyle) updatedFields.framestyle = framestyle;
+        if (textfont) updatedFields.textfont = textfont;
+        if (font) updatedFields.font = font;
+        if (framecolor) updatedFields.framecolor = framecolor;
+        if (textcolor) updatedFields.textcolor = textcolor;
+        if (margin) updatedFields.margin = margin;
+        if (errorcorrection) updatedFields.errorcorrection = errorcorrection;
+        if (imagePath) updatedFields.image = imagePath;
+
         // Update only the provided fields
-        await qrCodeRecord.update(updatedFields);
+        await qrCodeRecord.update(updatedFields)
 
         // Generate the QR code
         const qrCodeData = JSON.stringify(qrContentData);
